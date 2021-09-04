@@ -39,6 +39,18 @@ impl PointCloud2D {
         }
     }
 
+    /// Creates an empty PointCloud2D with a certain capacity
+    pub fn unsorted_with_capacity(n: usize) -> Self {
+        Self {
+            points: Vec::with_capacity(n),
+            positions_x: Vec::with_capacity(n),
+            positions_y: Vec::with_capacity(n),
+            sorted_x: Vec::with_capacity(n),
+            sorted_y: Vec::with_capacity(n),
+            is_sorted: false,
+        }
+    }
+
     /// Borrows the points
     pub fn points(&self) -> &[Point2D] {
         &self.points
