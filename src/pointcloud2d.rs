@@ -1,5 +1,4 @@
 use crate::Float;
-use crate::PI;
 
 use wasm_bindgen::prelude::*;
 
@@ -222,11 +221,11 @@ impl PointCloud2D {
                 context.begin_path();
                 context
                     .arc(
-                        canvas_p.x,
-                        canvas_p.y,
-                        RADIUS,
+                        canvas_p.x.into(),
+                        canvas_p.y.into(),
+                        RADIUS.into(),
                         0.,
-                        2.0 * PI,
+                        2.0 * std::f64::consts::PI,
                     )
                     .unwrap();
 
@@ -498,7 +497,7 @@ impl PointCloud2D {
         drawer.context().begin_path();
         drawer
             .context()
-            .arc(p.x, p.y, RADIUS, 0., 2.0 * PI)
+            .arc(p.x.into(), p.y.into(), RADIUS.into(), 0., 2.0 * std::f64::consts::PI)
             .unwrap();
 
         let fill_style = wasm_bindgen::JsValue::from_str("red");

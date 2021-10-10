@@ -36,7 +36,7 @@ impl Drawer2D {
     pub fn clear(&self) {
         let height = self.canvas.height() as Float;
         let width = self.canvas.width() as Float;
-        self.context.clear_rect(0.0, 0.0, width, height);
+        self.context.clear_rect(0.0, 0.0, width.into(), height.into());
     }
 
     /// Borrows the canvas

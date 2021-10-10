@@ -9,12 +9,13 @@ type Float = f32;
 #[cfg(not(feature = "float"))]
 type Float = f64;
 
+/*
 #[cfg(feature = "float")]
 const PI : Float = std::f32::consts::PI;
 
 #[cfg(not(feature = "float"))]
 const PI : Float = std::f64::consts::PI;
-
+*/
 
 
 pub mod drawer2d;
