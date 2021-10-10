@@ -1,3 +1,5 @@
+use crate::Float;
+
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -16,14 +18,14 @@ pub struct Drawer2D {
     center: Point2D,
 
     /// Real world width in meters
-    width: f64,
+    width: Float,
 }
 
 impl Drawer2D {
     /// Returns the (height, width) of the viewport in meters
-    pub fn viewport_size(&self) -> (f64, f64) {
-        let canvas_width = self.canvas.width() as f64;
-        let canvas_height = self.canvas.height() as f64;
+    pub fn viewport_size(&self) -> (Float, Float) {
+        let canvas_width = self.canvas.width() as Float;
+        let canvas_height = self.canvas.height() as Float;
         let r = canvas_width / canvas_height;
 
         // height = self.width/r
@@ -32,8 +34,8 @@ impl Drawer2D {
 
     /// Clears the canvas
     pub fn clear(&self) {
-        let height = self.canvas.height() as f64;
-        let width = self.canvas.width() as f64;
+        let height = self.canvas.height() as Float;
+        let width = self.canvas.width() as Float;
         self.context.clear_rect(0.0, 0.0, width, height);
     }
 
@@ -58,7 +60,7 @@ impl Drawer2D {
         let (vp_height, vp_width) = self.viewport_size();
 
         // Canvas/World Aspect ratio
-        let r = self.canvas.width() as f64 / self.width;
+        let r = self.canvas.width() as Float / self.width;
 
         // find origin of the viewport reference system
         let ocx = self.center.x - vp_width / 2.;
@@ -71,9 +73,9 @@ impl Drawer2D {
         };
 
         let is_visible = pt.x >= 0.0
-            && pt.x <= self.canvas.width() as f64
-            && pt.y >= 0.0 as f64
-            && pt.y <= self.canvas.height() as f64;
+            && pt.x <= self.canvas.width() as Float
+            && pt.y >= 0.0 as Float
+            && pt.y <= self.canvas.height() as Float;
 
         (pt, is_visible)
     }
@@ -116,7 +118,7 @@ impl Drawer2D {
         let (vp_height, vp_width) = self.viewport_size();
 
         // Canvas/World Aspect ratio
-        let r = self.canvas.width() as f64 / self.width;
+        let r = self.canvas.width() as Float / self.width;
 
         // find origin of the viewport reference system
         let ocx = self.center.x - vp_width / 2.;
@@ -137,19 +139,19 @@ impl Drawer2D {
     }
 
     /// Retreives the width of the viewport in World dimensions
-    pub fn width(&self) -> f64 {
+    pub fn width(&self) -> Float {
         let (_height, width) = self.viewport_size();
         width
     }
 
     /// Retreives the height of the viewport in World dimensions
-    pub fn height(&self) -> f64 {
+    pub fn height(&self) -> Float {
         let (height, _width) = self.viewport_size();
         height
     }
 
     /// Translates the center
-    pub fn translate_viewport(&mut self, x: f64, y: f64) {
+    pub fn translate_viewport(&mut self, x: Float, y: Float) {
         self.center.x += x;
         self.center.y += y;
     }
@@ -159,8 +161,4 @@ impl Drawer2D {
 mod tests {
     //use super::*;
 
-    #[test]
-    fn test_as_world_point() {
-        assert!(false)
-    }
 }

@@ -1,3 +1,6 @@
+use crate::Float;
+use crate::PI;
+
 use wasm_bindgen::prelude::*;
 
 use crate::drawer2d::Drawer2D;
@@ -61,7 +64,7 @@ impl PointCloud2D {
     ///
     /// If the tested point is in the same position as an already existing
     /// point, it will be marked as being after
-    fn find_point_position_x(&self, new_x: f64) -> Result<usize, String> {
+    fn find_point_position_x(&self, new_x: Float) -> Result<usize, String> {
         if !self.is_sorted {
             return Err("Cannont find_position_x in unsorted PointCloud2D".to_string());
         }
@@ -83,7 +86,7 @@ impl PointCloud2D {
     ///
     /// If the tested point is in the same position as an already existing
     /// point, it will be marked as being after
-    fn find_point_position_y(&self, new_y: f64) -> Result<usize,String> {
+    fn find_point_position_y(&self, new_y: Float) -> Result<usize,String> {
         if !self.is_sorted {
             return Err("Cannont find_position_y in unsorted PointCloud2D".to_string());
         }
@@ -210,7 +213,7 @@ impl PointCloud2D {
 
     /// Draws the Cloud
     pub fn draw(&self, drawer: &Drawer2D) {
-        const RADIUS: f64 = 5.;
+        const RADIUS: Float = 5.;
         let context = drawer.context();
 
         for p in &self.points {
@@ -223,7 +226,7 @@ impl PointCloud2D {
                         canvas_p.y,
                         RADIUS,
                         0.,
-                        2.0 * std::f64::consts::PI,
+                        2.0 * PI,
                     )
                     .unwrap();
 
@@ -261,7 +264,7 @@ impl PointCloud2D {
             // Insert in X
             let index_x = match self.find_point_position_x(p.x){
                 Ok(i)=>i,
-                Err(e)=>panic!(e)
+                Err(e)=>panic!("{}",e)
             };
             for e in self.positions_x.iter_mut() {
                 if *e >= index_x {
@@ -274,7 +277,7 @@ impl PointCloud2D {
             // Insert in Y
             let index_y = match self.find_point_position_y(p.y){
                 Ok(i)=>i,
-                Err(e)=>panic!(e)
+                Err(e)=>panic!("{}",e)
             };
             for e in self.positions_y.iter_mut() {
                 if *e >= index_y {
@@ -291,14 +294,14 @@ impl PointCloud2D {
     }
 
     /// Updates the Y element of a point in the cloud
-    pub fn update_point_y(&mut self, point_index: usize, new_y: f64) {
+    pub fn update_point_y(&mut self, point_index: usize, new_y: Float) {
         // We only care about positions when this is sorted
         if self.is_sorted {
 
             let old_y_position = self.positions_y[point_index];
             let mut new_y_position = match self.find_point_position_y(new_y){
                 Ok(i)=>i,
-                Err(e)=> panic!(e)
+                Err(e)=> panic!("{}",e)
             };
     
             if old_y_position > new_y_position {
@@ -351,7 +354,7 @@ impl PointCloud2D {
     }
 
     /// Updates the X element of a point in the cloud
-    pub fn update_point_x(&mut self, point_index: usize, new_x: f64) {
+    pub fn update_point_x(&mut self, point_index: usize, new_x: Float) {
         
         
         if self.is_sorted{
@@ -359,7 +362,7 @@ impl PointCloud2D {
             let old_x_position = self.positions_x[point_index];
             let mut new_x_position = match self.find_point_position_y(new_x){
                 Ok(i)=>i,
-                Err(e)=> panic!(e)
+                Err(e)=> panic!("{}",e)
             };
     
             if old_x_position > new_x_position {
@@ -415,16 +418,16 @@ impl PointCloud2D {
     pub fn update_point(&mut self, point_index: usize, new_p: Point2D) {
         let px = self.points[point_index].x;
         let py = self.points[point_index].y;
-        if (px - new_p.x).abs()>f64::EPSILON{
+        if (px - new_p.x).abs()>Float::EPSILON{
             self.update_point_x(point_index, new_p.x);
         }
-        if (py - new_p.y).abs()>f64::EPSILON{
+        if (py - new_p.y).abs()>Float::EPSILON{
             self.update_point_y(point_index, new_p.y);
         }
     }
 
     /// Moves a point 
-    pub fn translate_point(&mut self, point_index: usize, x_movement: f64, y_movement:f64){
+    pub fn translate_point(&mut self, point_index: usize, x_movement: Float, y_movement:Float){
         let px = self.points[point_index].x;
         let py = self.points[point_index].y;
         self.update_point(point_index, Point2D::new(px+x_movement, py+y_movement));
@@ -438,8 +441,8 @@ impl PointCloud2D {
     /// 2. Check which direction contains less points (i.e., X or Y)
     /// 3. Iterate the candidate points, checking the distance. If smallest so far, mark for return
     pub fn test_world_point(&self, p: &Point2D) -> Option<usize> {
-        const MAX_DISTANCE: f64 = 0.25;
-        const MAX_DISTANCE_SQ: f64 = MAX_DISTANCE * MAX_DISTANCE;
+        const MAX_DISTANCE: Float = 0.25;
+        const MAX_DISTANCE_SQ: Float = MAX_DISTANCE * MAX_DISTANCE;
 
         // 1. Find the points that might be close enough (i.e., within the p +- MAX_DISTANCE square)
         // Points outside of this rectangle cannot be "close enough"
@@ -490,12 +493,12 @@ impl PointCloud2D {
             return;
         }
 
-        const RADIUS: f64 = 8.;
+        const RADIUS: Float = 8.;
 
         drawer.context().begin_path();
         drawer
             .context()
-            .arc(p.x, p.y, RADIUS, 0., 2.0 * std::f64::consts::PI)
+            .arc(p.x, p.y, RADIUS, 0., 2.0 * PI)
             .unwrap();
 
         let fill_style = wasm_bindgen::JsValue::from_str("red");
@@ -761,7 +764,7 @@ mod tests {
         /* ************** */
         let mut cloud = PointCloud2D::new();
         for i in 0..n_points {
-            cloud.push(Point2D::new(i as f64, 0.0));
+            cloud.push(Point2D::new(i as Float, 0.0));
         }
         // These are out of the clould altogether
         let p = Point2D::new(-10.0, 0.0);
@@ -781,7 +784,7 @@ mod tests {
 
         // These are in
         for i in 0..n_points {
-            let p = Point2D::new(i as f64, 0.0);
+            let p = Point2D::new(i as Float, 0.0);
             assert_eq!(cloud.test_world_point(&p), Some(i));
         }
 
@@ -790,7 +793,7 @@ mod tests {
         /* ************** */
         let mut cloud = PointCloud2D::new();
         for i in 0..n_points {
-            cloud.push(Point2D::new(0.0, i as f64));
+            cloud.push(Point2D::new(0.0, i as Float));
         }
         // These are out of the clould altogether
         let p = Point2D::new(0.0, -10.0);
@@ -810,7 +813,7 @@ mod tests {
 
         // These are in
         for i in 0..n_points {
-            let p = Point2D::new(0.0, i as f64);
+            let p = Point2D::new(0.0, i as Float);
             assert_eq!(cloud.test_world_point(&p), Some(i));
         }
 
@@ -820,7 +823,7 @@ mod tests {
 
         let mut cloud = PointCloud2D::new();
         for i in 0..n_points {
-            cloud.push(Point2D::new(i as f64, i as f64));
+            cloud.push(Point2D::new(i as Float, i as Float));
         }
 
         // These are out of the clould altogether
@@ -841,7 +844,7 @@ mod tests {
 
         // These are in
         for i in 0..n_points {
-            let p = Point2D::new(i as f64, i as f64);
+            let p = Point2D::new(i as Float, i as Float);
             assert_eq!(cloud.test_world_point(&p), Some(i));
         }
     }

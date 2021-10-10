@@ -1,3 +1,5 @@
+use crate::Float;
+
 use wasm_bindgen::prelude::*;
 
 /// Very simple structure: a 2D Point, with x and
@@ -5,21 +7,21 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Point2D {
-    pub x: f64,
-    pub y: f64,
+    pub x: Float,
+    pub y: Float,
 }
 
 /// A point inside the Canvas
 #[wasm_bindgen]
 #[derive(Clone, Copy)]
 pub struct CanvasPoint2D {
-    pub x: f64,
-    pub y: f64,
+    pub x: Float,
+    pub y: Float,
 }
 
 impl Point2D {
     /// Calculates the squared distance to another point
-    pub fn squared_distance_to(&self, other: &Point2D) -> f64 {
+    pub fn squared_distance_to(&self, other: &Point2D) -> Float {
         let dx = self.x - other.x;
         let dy = self.y - other.y;
         dx * dx + dy * dy
@@ -29,7 +31,7 @@ impl Point2D {
 #[wasm_bindgen]
 impl Point2D {
     /// Builds a new Point2D
-    pub fn new(x: f64, y: f64) -> Self {
+    pub fn new(x: Float, y: Float) -> Self {
         Self { x, y }
     }
 }
@@ -37,7 +39,7 @@ impl Point2D {
 #[wasm_bindgen]
 impl CanvasPoint2D {
     /// Builds a new Point2D
-    pub fn new(x: f64, y: f64) -> Self {
+    pub fn new(x: Float, y: Float) -> Self {
         Self { x, y }
     }
 }

@@ -1,3 +1,5 @@
+use crate::Float;
+
 use crate::drawer2d::Drawer2D;
 
 /// A trait that the Tools in the Toolbox need to comply with.
@@ -7,5 +9,5 @@ pub trait ToolTrait<T> {
     fn onmousemove(&mut self, drawable: &T, drawer: &mut Drawer2D, x: u32, y: u32);
     fn onmousedown(&mut self, drawable: &T, drawer: &mut Drawer2D, x: u32, y: u32);
     fn onmouseup(&mut self, drawable: &T, drawer: &mut Drawer2D, x: u32, y: u32);
-    fn onwheel(&mut self, drawable: &T, drawer: &mut Drawer2D, dy: f64, x: u32, y: u32);
+    fn onwheel(&mut self, drawable: &T, drawer: &mut Drawer2D, dy: Float, x: u32, y: u32);
 }

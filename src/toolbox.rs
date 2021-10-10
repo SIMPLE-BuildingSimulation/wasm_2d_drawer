@@ -1,3 +1,5 @@
+use crate::Float;
+
 use crate::drawer2d::Drawer2D;
 use crate::tool_trait::ToolTrait;
 
@@ -60,7 +62,7 @@ impl<T> ToolBox<T> {
     /// Calls the onwheel event on the selected Tool.
     ///
     /// If None is selected, calls it on the first one. Panics if Toolbox is empty.
-    pub fn onwheel(&mut self, drawable: &T, drawer: &mut Drawer2D, dy: f64, x: u32, y: u32) {
+    pub fn onwheel(&mut self, drawable: &T, drawer: &mut Drawer2D, dy: Float, x: u32, y: u32) {
         let i = self.get_active_tool();
         self.tools[i].onwheel(drawable, drawer, dy, x, y);
     }
